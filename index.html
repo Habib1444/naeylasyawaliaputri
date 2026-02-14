@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffdae0; /* Pink soft */
+            overflow-x: hidden;
+            color: #4a4a4a;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .content-wrapper { width: 90%; max-width: 450px; position: relative; z-index: 10; }
+
+        /* Hujan Hati */
+        .heart-falling {
+            position: fixed;
+            top: -10%;
+            z-index: 1;
+            pointer-events: none;
+            animation: fall linear forwards;
+            color: #ff4d6d;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        /* Box Pesan */
+        .text-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(255, 77, 109, 0.2);
+            border: 2px solid #ff4d6d;
+            margin-top: 20px;
+        }
+
+        .profile-picture {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 6px solid #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .fake-btn {
+            background: #ff4d6d;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .fake-btn:hover { transform: scale(1.1); background: #ff758f; }
+
+        .hidden { display: none; }
+        .step h1 { color: #ff4d6d; margin-bottom: 10px; }
+        #replay { margin-top: 20px; color: #ff4d6d; cursor: pointer; text-decoration: underline; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <audio class="song" loop>
+        <source src="music/hbd_1.mp4" type="audio/mp4">
+    </audio>
+
+    <div class="container" id="mainContainer">
+        <div class="content-wrapper">
+            
+            <div class="step one">
+                <h1>Hi Naeyla! ❤️</h1>
+                <p>I really like your name btw!</p>
+            </div>
+
+            <div class="step two hidden">
+                <div class="text-box">
+                    <p>Happy valentine day buat ceweku tercintaa, sebenarnya aku setiap harii sayang sm kamu tanpa adanya hari valentine ini. Kamu haruss tauu kalau kamu itu orang yang bisa membangkitkan semangat aku lagi. Terus yaa, sekali lagiii happy valentine day 🤍🫶🏼</p>
+                    <div class="fake-btn">Kirim Sayang ❤️</div>
+                </div>
+            </div>
+
+            <div class="step final hidden">
+                <img src="img/naeyla.png" alt="Naeyla" class="profile-picture" onerror="this.src='https://i.pinimg.com/originals/ae/8a/c2/ae8ac2fa217d23aadcc913989fcc34a2.png'">
+                <h3>Happy Valentine's My Love!</h3>
+                <p>Semuanya tentang kamu itu perfect buat aku.</p>
+                <p id="replay">Klik untuk putar lagi :)</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Logika Interaksi
+        window.addEventListener('load', () => {
+            Swal.fire({
+                title: 'Halo Cantik! ❤️',
+                text: "Ada kejutan kecil dari Habib buat Naeyla, dibuka ya?",
+                imageUrl: 'img/naeyla.png',
+                imageWidth: 100,
+                imageHeight: 100,
+                imageAlt: 'Foto Naeyla',
+                confirmButtonColor: '#ff4d6d',
+                confirmButtonText: 'Buka Sekarang ✨',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const audio = document.querySelector('.song');
+                    audio.play().catch(e => console.log("Musik tertunda"));
+                    startAnimation();
+                }
+            });
+        });
+
+        function startAnimation() {
+            const container = document.getElementById('mainContainer');
+            container.style.visibility = 'visible';
+            
+            const tl = gsap.timeline();
+            tl.to(container, { opacity: 1, duration: 1.5 })
+              .from(".one", { y: 30, opacity: 0, duration: 1 })
+              .to(".one", { y: -30, opacity: 0, duration: 1, delay: 2.5, display: 'none' })
+              .to(".two", { display: 'block', opacity: 1, duration: 1 })
+              .from(".two", { scale: 0.8, duration: 1 }, "-=1")
+              .to(".two", { opacity: 0, delay: 5, display: 'none' })
+              .to(".final", { display: 'block', opacity: 1, duration: 1 })
+              .from(".final", { y: 30, duration: 1 });
+
+            // Jalankan hujan hati
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = ['❤️','💖','💗','🌸'][Math.floor(Math.random() * 4)];
+            heart.className = 'heart-falling';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        document.getElementById('replay').addEventListener('click', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
